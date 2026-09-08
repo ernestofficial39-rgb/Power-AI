@@ -3,909 +3,886 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#07070b">
+<meta name="theme-color" content="#08090d">
 <title>Power AI — AI Assistant</title>
-<meta name="description" content="Power AI — AI Assistant untuk coding, debugging, ESP32, Arduino, website, web search, voice, memory, dan image generation.">
+<meta name="description" content="Power AI — AI Assistant untuk coding, debugging, ESP32, Arduino, website, web search dan image generation.">
 <meta name="robots" content="index, follow">
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
---bg:#07070b;
---panel:#0d0e14;
---panel2:#12141c;
---panel3:#181b25;
---border:#272b38;
---text:#f5f7fb;
---muted:#9298a8;
---accent:#7c5cff;
---accent2:#a58bff;
---success:#35d07f;
---danger:#ff536d;
---shadow:0 18px 60px rgba(0,0,0,.38)
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-html,body{
-width:100%;
-height:100%;
-background:var(--bg);
-color:var(--text)
+:root{
+    --bg:#08090d;
+    --panel:#0e1017;
+    --panel2:#141722;
+    --border:#252936;
+    --text:#f4f5f7;
+    --muted:#9297a6;
+    --accent:#7c5cff;
+    --accent2:#9b7cff;
+    --success:#35d07f;
+    --danger:#ff4d67;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
 }
 
 body{
-font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-overflow:hidden
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    overflow:hidden;
 }
 
-button,input,textarea{
-font:inherit
+button,
+input,
+textarea{
+    font-family:inherit;
 }
 
 button{
-cursor:pointer;
--webkit-tap-highlight-color:transparent
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
 }
 
 .app{
-display:flex;
-width:100%;
-height:100vh
+    display:flex;
+    width:100%;
+    height:100vh;
 }
 
 .sidebar{
-width:285px;
-min-width:285px;
-background:#0a0b10;
-border-right:1px solid var(--border);
-display:flex;
-flex-direction:column;
-z-index:40;
-transition:.25s ease
+    width:280px;
+    min-width:280px;
+    height:100vh;
+    background:#0b0d12;
+    border-right:1px solid var(--border);
+    display:flex;
+    flex-direction:column;
+    z-index:80;
+    transition:.25s ease;
 }
 
-.sidebar-head{
-padding:18px;
-border-bottom:1px solid var(--border)
+.sidebar-header{
+    padding:18px;
+    border-bottom:1px solid var(--border);
 }
 
-.brand{
-display:flex;
-align-items:center;
-gap:12px
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-weight:800;
+    font-size:20px;
 }
 
-.brand-icon{
-width:42px;
-height:42px;
-border-radius:13px;
-display:grid;
-place-items:center;
-background:linear-gradient(135deg,#7c5cff,#4324d5);
-box-shadow:0 0 30px rgba(124,92,255,.3);
-font-size:21px
-}
-
-.brand-title{
-font-size:20px;
-font-weight:900
-}
-
-.brand-sub{
-font-size:11px;
-color:var(--muted);
-margin-top:2px
+.logo-icon{
+    width:38px;
+    height:38px;
+    border-radius:12px;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,#7c5cff,#4b2cff);
+    box-shadow:0 0 25px rgba(124,92,255,.35);
 }
 
 .new-chat{
-width:100%;
-margin-top:16px;
-padding:12px;
-border-radius:11px;
-border:1px solid var(--border);
-background:#151822;
-color:#fff;
-font-weight:800
+    margin-top:18px;
+    width:100%;
+    border:1px solid var(--border);
+    background:#141720;
+    color:#fff;
+    border-radius:12px;
+    padding:12px;
+    font-weight:700;
 }
 
 .new-chat:hover{
-background:#1c2030;
-border-color:#42495b
+    background:#1c2030;
 }
 
-.side-tools{
-padding:12px;
-display:grid;
-gap:7px
+.sidebar-tools{
+    padding:12px;
+    display:grid;
+    gap:8px;
 }
 
-.side-tool{
-width:100%;
-padding:10px 11px;
-border-radius:10px;
-border:1px solid transparent;
-background:transparent;
-color:#d9dde6;
-text-align:left
+.side-btn{
+    width:100%;
+    border:1px solid transparent;
+    background:transparent;
+    color:#d8dae1;
+    text-align:left;
+    padding:11px 12px;
+    border-radius:10px;
+    font-size:14px;
 }
 
-.side-tool:hover{
-background:#141720;
-border-color:var(--border)
+.side-btn:hover{
+    background:#151822;
+    border-color:var(--border);
 }
 
 .history-title{
-padding:10px 16px 7px;
-color:#808697;
-font-size:11px;
-font-weight:800;
-text-transform:uppercase;
-letter-spacing:.08em
+    padding:12px 18px 7px;
+    color:var(--muted);
+    font-size:12px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.08em;
 }
 
 .history-search{
-margin:0 12px 9px;
-width:calc(100% - 24px);
-padding:9px 10px;
-border-radius:9px;
-border:1px solid var(--border);
-background:#10121a;
-color:#fff;
-outline:none
+    margin:0 12px 8px;
+    width:calc(100% - 24px);
+    background:#11141b;
+    border:1px solid var(--border);
+    color:#fff;
+    border-radius:9px;
+    padding:9px 10px;
+    outline:none;
 }
 
 .history-search:focus{
-border-color:var(--accent)
+    border-color:var(--accent);
 }
 
-.history{
-flex:1;
-overflow:auto;
-padding:0 10px 12px
+.history-list{
+    flex:1;
+    overflow-y:auto;
+    padding:4px 10px 14px;
 }
 
-.history-empty{
-color:#737989;
-padding:14px 9px;
-font-size:13px
+.history-item{
+    display:flex;
+    gap:5px;
+    margin-bottom:4px;
 }
 
-.history-row{
-display:flex;
-gap:4px;
-margin-bottom:4px
+.history-main{
+    flex:1;
+    min-width:0;
+    background:transparent;
+    border:1px solid transparent;
+    color:#d7d9e0;
+    padding:10px;
+    border-radius:9px;
+    text-align:left;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
 }
 
-.history-open{
-flex:1;
-min-width:0;
-border:1px solid transparent;
-background:transparent;
-color:#d8dce6;
-padding:10px;
-border-radius:9px;
-text-align:left;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis
-}
-
-.history-open:hover,
-.history-row.active .history-open{
-background:#151822;
-border-color:var(--border)
+.history-main:hover,
+.history-item.active .history-main{
+    background:#171a24;
+    border-color:var(--border);
 }
 
 .history-delete{
-width:34px;
-border:0;
-background:transparent;
-color:#6f7585;
-border-radius:8px;
-opacity:.1
+    border:0;
+    background:transparent;
+    color:#777c89;
+    padding:7px;
+    opacity:0;
 }
 
-.history-row:hover .history-delete{
-opacity:1
+.history-item:hover .history-delete{
+    opacity:1;
 }
 
-.history-delete:hover{
-background:#23141a;
-color:#ff8797
+.sidebar-footer{
+    border-top:1px solid var(--border);
+    padding:14px;
+    color:var(--muted);
+    font-size:12px;
 }
 
-.sidebar-foot{
-border-top:1px solid var(--border);
-padding:13px 15px;
-color:#707687;
-font-size:11px;
-line-height:1.6
+.sidebar-overlay{
+    display:none;
 }
 
 .main{
-flex:1;
-min-width:0;
-display:flex;
-flex-direction:column;
-position:relative;
-background:
-radial-gradient(
-circle at 85% 0,
-rgba(124,92,255,.12),
-transparent 32%
-),
-var(--bg)
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    position:relative;
 }
 
 .topbar{
-height:64px;
-min-height:64px;
-border-bottom:1px solid var(--border);
-display:flex;
-align-items:center;
-padding:0 18px;
-gap:12px;
-background:rgba(7,7,11,.9);
-backdrop-filter:blur(14px);
-z-index:10
+    height:62px;
+    min-height:62px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:0 18px;
+    background:rgba(8,9,13,.92);
+    backdrop-filter:blur(14px);
+    z-index:10;
 }
 
 .menu-btn{
-display:none;
-border:0;
-background:transparent;
-color:#fff;
-font-size:23px
+    display:none;
+    border:1px solid var(--border);
+    background:#11131a;
+    color:#fff;
+    border-radius:10px;
+    width:40px;
+    height:40px;
+    font-size:23px;
+    padding:0;
 }
 
 .top-title{
-font-weight:900;
-flex:1
+    font-weight:800;
+    flex:1;
 }
 
-.top-status{
-display:flex;
-align-items:center;
-gap:7px;
-font-size:12px;
-color:var(--success)
+.status{
+    font-size:12px;
+    color:var(--success);
+    display:flex;
+    align-items:center;
+    gap:6px;
 }
 
 .status-dot{
-width:7px;
-height:7px;
-border-radius:50%;
-background:var(--success);
-box-shadow:0 0 11px var(--success)
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--success);
+    box-shadow:0 0 10px var(--success);
 }
 
 .top-actions{
-display:flex;
-gap:7px
+    display:flex;
+    gap:6px;
 }
 
 .icon-btn{
-width:38px;
-height:38px;
-border-radius:10px;
-border:1px solid var(--border);
-background:#11131a;
-color:#fff
+    width:38px;
+    height:38px;
+    border:1px solid var(--border);
+    background:#11131a;
+    color:#fff;
+    border-radius:10px;
 }
 
 .icon-btn:hover{
-background:#191c26
+    background:#1b1e29;
 }
 
 .chat{
-flex:1;
-overflow:auto
+    flex:1;
+    overflow-y:auto;
+    scroll-behavior:smooth;
 }
 
 .chat-inner{
-width:min(950px,100%);
-margin:0 auto;
-padding:30px 22px 190px
+    width:min(900px,100%);
+    margin:auto;
+    padding:35px 22px 160px;
 }
 
 .welcome{
-max-width:790px;
-margin:8vh auto 0;
-text-align:center
+    text-align:center;
+    padding:8vh 10px 40px;
 }
 
-.welcome-icon{
-width:82px;
-height:82px;
-margin:0 auto 20px;
-border-radius:25px;
-display:grid;
-place-items:center;
-font-size:36px;
-background:linear-gradient(135deg,#7c5cff,#3e20d1);
-box-shadow:0 0 55px rgba(124,92,255,.3)
+.welcome-logo{
+    width:72px;
+    height:72px;
+    border-radius:24px;
+    display:grid;
+    place-items:center;
+    margin:0 auto 22px;
+    font-size:34px;
+    background:linear-gradient(135deg,#7c5cff,#4527d9);
+    box-shadow:0 0 50px rgba(124,92,255,.3);
 }
 
 .welcome h1{
-font-size:clamp(30px,5vw,48px);
-margin-bottom:10px
+    font-size:clamp(28px,5vw,44px);
+    margin-bottom:12px;
 }
 
 .welcome p{
-color:var(--muted);
-line-height:1.7;
-max-width:680px;
-margin:0 auto
+    color:var(--muted);
+    max-width:650px;
+    margin:auto;
+    line-height:1.7;
 }
 
 .quick-grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px;
-max-width:720px;
-margin:28px auto
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    max-width:700px;
+    margin:30px auto 0;
 }
 
-.quick{
-padding:14px;
-border-radius:13px;
-border:1px solid var(--border);
-background:#11131a;
-color:#e2e5ec;
-text-align:left
+.quick-btn{
+    background:#11141b;
+    border:1px solid var(--border);
+    color:#ddd;
+    padding:14px;
+    border-radius:12px;
+    text-align:left;
 }
 
-.quick:hover{
-background:#171a24;
-border-color:#4a5061
+.quick-btn:hover{
+    border-color:#50576c;
+    background:#161923;
 }
 
 .message{
-display:flex;
-gap:12px;
-margin:22px 0
+    display:flex;
+    gap:13px;
+    margin:22px 0;
+    line-height:1.7;
 }
 
 .message.user{
-justify-content:flex-end
+    justify-content:flex-end;
+}
+
+.message.user .bubble{
+    background:#1a1d27;
+    border:1px solid #292d3a;
 }
 
 .avatar{
-width:36px;
-height:36px;
-min-width:36px;
-border-radius:11px;
-display:grid;
-place-items:center;
-background:#161922;
-border:1px solid var(--border);
-font-weight:800
+    width:34px;
+    height:34px;
+    min-width:34px;
+    border-radius:11px;
+    display:grid;
+    place-items:center;
+    background:#171a24;
+    border:1px solid var(--border);
 }
 
-.user .avatar{
-order:2;
-background:#fff;
-color:#000
+.message.user .avatar{
+    order:2;
 }
 
-.content{
-max-width:calc(100% - 50px);
-min-width:0
+.message-content{
+    max-width:calc(100% - 50px);
+    min-width:0;
 }
 
 .bubble{
-line-height:1.72;
-color:#f1f3f8;
-overflow-wrap:anywhere
+    border-radius:14px;
+    padding:13px 16px;
+    background:transparent;
+    word-break:break-word;
 }
 
-.user .bubble{
-background:#191d27;
-border:1px solid #2c3140;
-border-radius:14px;
-padding:12px 15px;
-white-space:pre-wrap
+.bubble p{
+    margin-bottom:12px;
 }
 
-.assistant .bubble{
-padding:1px 2px
+.bubble p:last-child{
+    margin-bottom:0;
 }
 
-.actions{
-display:flex;
-flex-wrap:wrap;
-gap:5px;
-margin-top:8px
+.bubble ul{
+    padding-left:24px;
+    margin:10px 0;
 }
 
-.actions button{
-border:1px solid var(--border);
-background:#10131a;
-color:#aeb4c2;
-border-radius:8px;
-padding:6px 9px;
-font-size:12px
-}
-
-.actions button:hover{
-background:#1a1e29;
-color:#fff
-}
-
-.typing{
-display:flex;
-align-items:center;
-gap:9px;
-color:#868c9c;
-font-size:13px;
-margin:24px 0
-}
-
-.dots{
-display:flex;
-gap:4px
-}
-
-.dots i{
-width:7px;
-height:7px;
-border-radius:50%;
-background:#969bab;
-animation:bounce 1s infinite
-}
-
-.dots i:nth-child(2){
-animation-delay:.14s
-}
-
-.dots i:nth-child(3){
-animation-delay:.28s
-}
-
-@keyframes bounce{
-0%,80%,100%{
-transform:translateY(0);
-opacity:.35
-}
-
-40%{
-transform:translateY(-5px);
-opacity:1
-}
+.bubble blockquote{
+    border-left:3px solid var(--accent);
+    padding-left:13px;
+    color:#b9bdc9;
+    margin:10px 0;
 }
 
 .bubble h1,
 .bubble h2,
 .bubble h3{
-margin:15px 0 9px
-}
-
-.bubble p{
-margin:0 0 11px
-}
-
-.bubble ul,
-.bubble ol{
-padding-left:23px;
-margin:8px 0
-}
-
-.bubble blockquote{
-margin:10px 0;
-padding-left:12px;
-border-left:3px solid var(--accent);
-color:#bec3ce
+    margin:15px 0 9px;
 }
 
 .inline-code{
-font-family:Consolas,monospace;
-background:#191c25;
-border:1px solid #2a2e39;
-border-radius:5px;
-padding:2px 5px
+    background:#171a23;
+    border:1px solid #292d38;
+    border-radius:5px;
+    padding:2px 5px;
+    font-family:Consolas,monospace;
 }
 
 .code-wrap{
-border:1px solid #2b2f3d;
-border-radius:12px;
-background:#080a0e;
-overflow:hidden;
-margin:12px 0
+    margin:14px 0;
+    border:1px solid #2a2e3b;
+    border-radius:11px;
+    overflow:hidden;
+    background:#090b10;
 }
 
 .code-head{
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:8px 10px;
-background:#10131a;
-color:#858b9a;
-font-size:11px
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:8px 11px;
+    background:#11141b;
+    color:#9298a8;
+    font-size:12px;
 }
 
 .code-copy{
-border:1px solid #2c3140;
-background:#171b23;
-color:#dfe3eb;
-border-radius:6px;
-padding:5px 8px
+    border:1px solid #2b3040;
+    background:#171a23;
+    color:#ddd;
+    border-radius:6px;
+    padding:5px 8px;
 }
 
-.code-pre{
-padding:14px;
-overflow:auto;
-font:13px/1.65 Consolas,"Courier New",monospace;
-color:#e5e8ee;
-white-space:pre
+.code-wrap pre{
+    padding:15px;
+    overflow-x:auto;
+    margin:0;
+}
+
+.code-wrap code{
+    font-family:Consolas,"Courier New",monospace;
+    font-size:13px;
+    line-height:1.65;
+    white-space:pre;
+}
+
+.message-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:5px;
+    margin-top:7px;
+    opacity:.75;
+}
+
+.message-actions button{
+    border:1px solid var(--border);
+    background:#10131a;
+    color:#aeb2bf;
+    border-radius:7px;
+    padding:5px 8px;
+    font-size:12px;
+}
+
+.message-actions button:hover{
+    color:#fff;
+    background:#191d27;
 }
 
 .generated-image{
-display:block;
-max-width:min(100%,760px);
-max-height:700px;
-object-fit:contain;
-border-radius:14px;
-border:1px solid var(--border);
-margin-top:12px;
-box-shadow:var(--shadow)
+    margin-top:12px;
+    max-width:100%;
+    border-radius:14px;
+    border:1px solid var(--border);
+    display:block;
+    box-shadow:0 15px 50px rgba(0,0,0,.4);
 }
 
-.image-tools{
-display:flex;
-gap:7px;
-margin-top:8px
+.image-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:9px;
 }
 
-.image-tools button{
-border:1px solid var(--border);
-background:#11141b;
-color:#fff;
-border-radius:8px;
-padding:7px 10px;
-font-size:12px
+.image-actions button{
+    border:1px solid var(--border);
+    background:#11141b;
+    color:#fff;
+    padding:8px 11px;
+    border-radius:8px;
+}
+
+.typing{
+    display:none;
+    align-items:center;
+    gap:10px;
+    margin:20px 0;
+}
+
+.typing.show{
+    display:flex;
+}
+
+.typing-dots{
+    display:flex;
+    gap:4px;
+}
+
+.typing-dots span{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#9297a6;
+    animation:bounce 1s infinite;
+}
+
+.typing-dots span:nth-child(2){
+    animation-delay:.15s;
+}
+
+.typing-dots span:nth-child(3){
+    animation-delay:.3s;
+}
+
+@keyframes bounce{
+    0%,80%,100%{
+        transform:translateY(0);
+        opacity:.4;
+    }
+    40%{
+        transform:translateY(-5px);
+        opacity:1;
+    }
 }
 
 .composer-area{
-position:fixed;
-left:285px;
-right:0;
-bottom:0;
-z-index:20;
-padding:14px 20px 20px;
-background:
-linear-gradient(
-transparent,
-var(--bg) 28%
-);
-pointer-events:none
+    position:fixed;
+    bottom:0;
+    right:0;
+    left:280px;
+    padding:14px 20px 20px;
+    background:linear-gradient(transparent,var(--bg) 28%);
+    pointer-events:none;
+    z-index:30;
 }
 
 .composer{
-width:min(950px,100%);
-margin:0 auto;
-background:#10131a;
-border:1px solid #2a2f3b;
-border-radius:17px;
-box-shadow:0 18px 60px rgba(0,0,0,.35);
-pointer-events:auto
+    width:min(900px,100%);
+    margin:auto;
+    pointer-events:auto;
+    background:#11141b;
+    border:1px solid #2a2e39;
+    border-radius:16px;
+    box-shadow:0 15px 50px rgba(0,0,0,.3);
 }
 
-.composer-input{
-width:100%;
-min-height:56px;
-max-height:180px;
-resize:none;
-border:0;
-outline:none;
-background:transparent;
-color:#fff;
-padding:16px;
-font-size:15px;
-line-height:1.5
+.composer textarea{
+    width:100%;
+    min-height:52px;
+    max-height:180px;
+    resize:none;
+    border:0;
+    outline:0;
+    background:transparent;
+    color:#fff;
+    padding:16px;
+    font-size:15px;
 }
 
-.composer-input::placeholder{
-color:#697082
+.composer textarea::placeholder{
+    color:#6f7482;
 }
 
-.composer-tools{
-display:flex;
-align-items:center;
-gap:7px;
-padding:0 10px 10px
+.composer-bottom{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:0 10px 10px;
 }
 
-.tool{
-border:1px solid var(--border);
-background:#171a22;
-color:#c9ced9;
-border-radius:9px;
-padding:8px 10px;
-font-size:12px
+.tool-btn{
+    border:1px solid var(--border);
+    background:#171a22;
+    color:#c9ccd5;
+    border-radius:9px;
+    padding:8px 10px;
 }
 
-.tool:hover{
-background:#20242f;
-color:#fff
+.tool-btn:hover{
+    background:#202431;
+    color:#fff;
 }
 
-.tool.active{
-border-color:#5944c7;
-background:#211d39;
-color:#fff
+.send-btn{
+    margin-left:auto;
+    width:40px;
+    height:40px;
+    border-radius:10px;
+    border:0;
+    background:var(--accent);
+    color:#fff;
+    font-size:17px;
 }
 
-.send{
-margin-left:auto;
-width:42px;
-height:42px;
-border:0;
-border-radius:11px;
-background:var(--accent);
-color:#fff;
-font-size:18px
+.send-btn:hover{
+    background:var(--accent2);
 }
 
-.send:hover{
-background:var(--accent2)
+.send-btn:disabled{
+    opacity:.4;
+    cursor:not-allowed;
 }
 
-.send:disabled{
-opacity:.4;
-cursor:not-allowed
+.stop-btn{
+    display:none;
+    background:#37151c;
+    border:1px solid #652632;
+    color:#ff7c8e;
 }
 
-.stop{
-display:none;
-background:#35151c;
-color:#ff9aaa;
-border-color:#622534
+.stop-btn.show{
+    display:block;
 }
 
-.stop.show{
-display:block
+.search-check{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    color:#9297a6;
+    font-size:12px;
+    margin-left:5px;
 }
 
-.search-wrap{
-display:flex;
-align-items:center;
-gap:6px;
-color:#8f95a4;
-font-size:11px
-}
-
-.search-wrap input{
-accent-color:var(--accent)
+.search-check input{
+    accent-color:var(--accent);
 }
 
 .modal{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.75);
-backdrop-filter:blur(9px);
-display:none;
-align-items:center;
-justify-content:center;
-padding:20px;
-z-index:100
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.72);
+    backdrop-filter:blur(8px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:100;
 }
 
 .modal.show{
-display:flex
+    display:flex;
 }
 
 .modal-box{
-width:min(640px,100%);
-background:#10131a;
-border:1px solid #2d3240;
-border-radius:18px;
-box-shadow:0 30px 100px rgba(0,0,0,.55);
-overflow:hidden
+    width:min(600px,100%);
+    background:#10131b;
+    border:1px solid #2c3040;
+    border-radius:18px;
+    box-shadow:0 30px 100px rgba(0,0,0,.55);
+    overflow:hidden;
 }
 
-.modal-head{
-display:flex;
-align-items:center;
-padding:16px 18px;
-border-bottom:1px solid var(--border);
-gap:10px
+.modal-header{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:17px 18px;
+    border-bottom:1px solid var(--border);
 }
 
 .modal-title{
-font-weight:900;
-flex:1
+    flex:1;
+    font-weight:800;
 }
 
-.close{
-width:34px;
-height:34px;
-border-radius:9px;
-border:1px solid var(--border);
-background:#171a22;
-color:#fff
+.modal-close{
+    width:34px;
+    height:34px;
+    border-radius:9px;
+    border:1px solid var(--border);
+    background:#171a23;
+    color:#fff;
 }
 
 .modal-body{
-padding:18px
+    padding:18px;
 }
 
 .modal-body label{
-display:block;
-color:#adb3c0;
-font-size:12px;
-margin-bottom:7px
+    display:block;
+    color:#aeb2be;
+    font-size:13px;
+    margin-bottom:8px;
 }
 
-.field{
-width:100%;
-border:1px solid #2d3240;
-background:#090b10;
-color:#fff;
-border-radius:11px;
-outline:none;
-padding:12px;
-font-size:14px;
-line-height:1.55
+.image-prompt,
+.memory-textarea{
+    width:100%;
+    background:#090b10;
+    border:1px solid #2d3240;
+    color:#fff;
+    border-radius:12px;
+    padding:13px;
+    outline:0;
+    font-size:14px;
+    line-height:1.6;
 }
 
 .image-prompt{
-min-height:150px;
-resize:vertical
+    min-height:150px;
+    resize:vertical;
 }
 
-.memory-name{
-margin-bottom:14px
+.memory-textarea{
+    min-height:150px;
+    resize:vertical;
 }
 
-.chips{
-display:flex;
-flex-wrap:wrap;
-gap:7px;
-margin-top:10px
+.image-prompt:focus,
+.memory-textarea:focus{
+    border-color:var(--accent);
 }
 
-.chip{
-border:1px solid var(--border);
-background:#171a22;
-color:#bfc4d0;
-border-radius:20px;
-padding:7px 10px;
-font-size:11px
+.image-options{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-top:10px;
 }
 
-.chip:hover{
-border-color:#555c6e;
-color:#fff
+.prompt-chip{
+    border:1px solid var(--border);
+    background:#171a22;
+    color:#bbbfc9;
+    border-radius:20px;
+    padding:7px 10px;
+    font-size:12px;
 }
 
-.modal-foot{
-display:flex;
-justify-content:flex-end;
-gap:8px;
-padding:14px 18px;
-border-top:1px solid var(--border)
+.modal-footer{
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+    padding:15px 18px;
+    border-top:1px solid var(--border);
 }
 
 .btn{
-border:1px solid var(--border);
-background:#171a22;
-color:#fff;
-border-radius:9px;
-padding:10px 14px
+    border:1px solid var(--border);
+    background:#171a22;
+    color:#fff;
+    border-radius:9px;
+    padding:10px 14px;
 }
 
 .btn.primary{
-border-color:transparent;
-background:var(--accent)
+    border-color:transparent;
+    background:var(--accent);
 }
 
-.btn.danger{
-background:#35151c;
-color:#ff9aaa;
-border-color:#652633
+.btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
 }
 
 .toast{
-position:fixed;
-left:50%;
-bottom:98px;
-transform:translate(-50%,15px);
-padding:10px 14px;
-border:1px solid #303645;
-background:#171a22;
-color:#fff;
-border-radius:10px;
-opacity:0;
-pointer-events:none;
-transition:.22s;
-z-index:200;
-box-shadow:var(--shadow)
+    position:fixed;
+    left:50%;
+    bottom:95px;
+    transform:translateX(-50%) translateY(15px);
+    background:#171a22;
+    border:1px solid #303545;
+    color:#fff;
+    padding:10px 15px;
+    border-radius:10px;
+    opacity:0;
+    pointer-events:none;
+    transition:.25s;
+    z-index:200;
+    box-shadow:0 10px 40px rgba(0,0,0,.4);
 }
 
 .toast.show{
-opacity:1;
-transform:translate(-50%,0)
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
 }
 
 @media(max-width:800px){
 
-.sidebar{
-position:fixed;
-left:-295px;
-top:0;
-bottom:0;
-box-shadow:20px 0 70px rgba(0,0,0,.55)
-}
+    .sidebar{
+        position:fixed;
+        left:-290px;
+        top:0;
+        bottom:0;
+        box-shadow:20px 0 70px rgba(0,0,0,.5);
+    }
 
-.sidebar.open{
-left:0
-}
+    .sidebar.open{
+        left:0;
+    }
 
-.menu-btn{
-display:block
-}
+    .sidebar-overlay.show{
+        display:block;
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,.55);
+        z-index:70;
+    }
 
-.composer-area{
-left:0;
-padding:10px
-}
+    .menu-btn{
+        display:block;
+        position:fixed;
+        left:12px;
+        top:11px;
+        z-index:95;
+    }
 
-.chat-inner{
-padding-left:13px;
-padding-right:13px
-}
+    .topbar{
+        padding-left:64px;
+    }
 
-.topbar{
-padding:0 12px
-}
+    .main{
+        width:100%;
+    }
 
-.top-status{
-display:none
-}
+    .composer-area{
+        left:0;
+        padding:10px;
+    }
 
-.quick-grid{
-grid-template-columns:1fr
-}
+    .chat-inner{
+        padding-left:13px;
+        padding-right:13px;
+    }
 
-.composer-tools{
-overflow-x:auto
-}
+    .quick-grid{
+        grid-template-columns:1fr;
+    }
 
-.tool,
-.search-wrap{
-white-space:nowrap
-}
-
-.history-delete{
-opacity:1
-}
+    .status{
+        display:none;
+    }
 }
 
 @media(max-width:500px){
 
-.top-actions .icon-btn:nth-child(2){
-display:none
-}
+    .top-actions .icon-btn:nth-child(2){
+        display:none;
+    }
 
-.welcome{
-margin-top:5vh
-}
+    .tool-btn{
+        font-size:11px;
+        padding:7px;
+    }
 
-.welcome h1{
-font-size:32px
-}
+    .search-check{
+        font-size:10px;
+    }
 
-.composer-input{
-font-size:14px
-}
-
-.tool{
-padding:7px 8px;
-font-size:11px
-}
-
-.actions button{
-font-size:11px
-}
+    .composer textarea{
+        min-height:48px;
+    }
 }
 </style>
 </head>
@@ -914,3693 +891,432 @@ font-size:11px
 
 <div class="app">
 
-  <aside class="sidebar" id="sidebar">
+    <aside class="sidebar" id="sidebar">
 
-    <div class="sidebar-head">
+        <div class="sidebar-header">
 
-      <div class="brand">
+            <div class="logo">
+                <div class="logo-icon">⚡</div>
+                <span>Power AI</span>
+            </div>
 
-        <div class="brand-icon">
-          ⚡
+            <button class="new-chat" id="newChatButton">
+                ＋ Chat Baru
+            </button>
+
         </div>
 
-        <div>
-          <div class="brand-title">
-            Power AI
-          </div>
+        <div class="sidebar-tools">
 
-          <div class="brand-sub">
-            SUPER AI ASSISTANT
-          </div>
+            <button class="side-btn" id="openImageSide">
+                🎨 Image Generator
+            </button>
+
+            <button class="side-btn" id="openMemorySide">
+                🧠 Global Memory
+            </button>
+
+            <button class="side-btn" id="exportSide">
+                📦 Export History
+            </button>
+
+            <button class="side-btn" id="clearSide">
+                🗑️ Hapus Semua Chat
+            </button>
+
         </div>
 
-      </div>
+        <div class="history-title">
+            Riwayat Chat
+        </div>
 
-      <button
-        class="new-chat"
-        id="newChatBtn"
-      >
-        ＋ Chat Baru
-      </button>
+        <input
+            id="historySearch"
+            class="history-search"
+            placeholder="Cari chat..."
+            autocomplete="off"
+        >
 
-    </div>
+        <div
+            id="historyList"
+            class="history-list"
+        ></div>
 
-    <div class="side-tools">
+        <div class="sidebar-footer">
+            Power AI SUPER<br>
+            AI Assistant • Online
+        </div>
 
-      <button
-        class="side-tool"
-        id="imageBtnSide"
-      >
-        🎨 Image Generator
-      </button>
-
-      <button
-        class="side-tool"
-        id="memoryBtnSide"
-      >
-        🧠 Global Memory
-      </button>
-
-      <button
-        class="side-tool"
-        id="exportBtn"
-      >
-        📦 Export History
-      </button>
-
-      <button
-        class="side-tool"
-        id="clearBtn"
-      >
-        🗑️ Hapus Semua Chat
-      </button>
-
-    </div>
-
-    <div class="history-title">
-      Riwayat Chat
-    </div>
-
-    <input
-      class="history-search"
-      id="historySearch"
-      placeholder="Cari chat..."
-      autocomplete="off"
-    >
+    </aside>
 
     <div
-      class="history"
-      id="history"
+        class="sidebar-overlay"
+        id="sidebarOverlay"
     ></div>
 
-    <div class="sidebar-foot">
-      Power AI SUPER
-      <br>
-      Chat history tersimpan di browser.
-    </div>
+    <main class="main">
 
-  </aside>
+        <header class="topbar">
 
-  <main class="main">
+            <button
+                class="menu-btn"
+                id="menuButton"
+                aria-label="Buka menu"
+                title="Menu"
+            >
+                ☰
+            </button>
 
-    <header class="topbar">
+            <div class="top-title">
+                Power AI
+            </div>
 
-      <button
-        class="menu-btn"
-        id="menuBtn"
-      >
-        ☰
-      </button>
+            <div class="status">
+                <span class="status-dot"></span>
+                <span id="statusText">ONLINE</span>
+            </div>
 
-      <div class="top-title">
-        Power AI
-      </div>
+            <div class="top-actions">
 
-      <div class="top-status">
+                <button
+                    class="icon-btn"
+                    id="openImageTop"
+                    title="Image Generator"
+                >
+                    🎨
+                </button>
 
-        <span class="status-dot"></span>
+                <button
+                    class="icon-btn"
+                    id="openMemoryTop"
+                    title="Memory"
+                >
+                    🧠
+                </button>
 
-        <span id="statusText">
-          ONLINE
-        </span>
+            </div>
 
-      </div>
+        </header>
 
-      <div class="top-actions">
-
-        <button
-          class="icon-btn"
-          id="imageBtnTop"
-          title="Image Generator"
+        <section
+            class="chat"
+            id="chat"
         >
-          🎨
-        </button>
 
-        <button
-          class="icon-btn"
-          id="memoryBtnTop"
-          title="Global Memory"
-        >
-          🧠
-        </button>
+            <div
+                class="chat-inner"
+                id="chatInner"
+            ></div>
 
-      </div>
+        </section>
 
-    </header>
-
-    <section
-      class="chat"
-      id="chat"
-    >
-
-      <div
-        class="chat-inner"
-        id="chatInner"
-      ></div>
-
-    </section>
-
-  </main>
+    </main>
 
 </div>
 
 <div class="composer-area">
 
-  <div class="composer">
+    <div class="composer">
 
-    <textarea
-      class="composer-input"
-      id="messageInput"
-      placeholder="Tanyakan apa saja kepada Power AI..."
-      rows="1"
-    ></textarea>
+        <textarea
+            id="messageInput"
+            placeholder="Tanyakan apa saja kepada Power AI..."
+            rows="1"
+        ></textarea>
 
-    <div class="composer-tools">
+        <div class="composer-bottom">
 
-      <button
-        class="tool"
-        id="imageBtnComposer"
-      >
-        🎨 Gambar
-      </button>
+            <button
+                class="tool-btn"
+                id="openImageBottom"
+            >
+                🎨 Gambar
+            </button>
 
-      <button
-        class="tool"
-        id="voiceBtn"
-      >
-        🎤 Voice
-      </button>
+            <button
+                class="tool-btn"
+                id="voiceButton"
+            >
+                🎤 Voice
+            </button>
 
-      <button
-        class="tool stop"
-        id="stopBtn"
-      >
-        ⛔ Stop
-      </button>
+            <button
+                class="tool-btn stop-btn"
+                id="stopButton"
+            >
+                ⛔ Stop
+            </button>
 
-      <label class="search-wrap">
+            <label class="search-check">
+                <input
+                    type="checkbox"
+                    id="webSearch"
+                >
+                Web Search
+            </label>
 
-        <input
-          type="checkbox"
-          id="webSearch"
-        >
+            <button
+                class="send-btn"
+                id="sendButton"
+            >
+                ➤
+            </button>
 
-        🌐 Web Search
-
-      </label>
-
-      <button
-        class="send"
-        id="sendBtn"
-      >
-        ➤
-      </button>
+        </div>
 
     </div>
-
-  </div>
 
 </div>
 
 <div
-  class="modal"
-  id="imageModal"
+    class="modal"
+    id="imageModal"
 >
 
-  <div class="modal-box">
+    <div class="modal-box">
 
-    <div class="modal-head">
+        <div class="modal-header">
 
-      <div class="modal-title">
-        🎨 Power AI Image Generator
-      </div>
+            <div class="modal-title">
+                🎨 Power AI Image Generator
+            </div>
 
-      <button
-        class="close"
-        data-close="imageModal"
-      >
-        ✕
-      </button>
+            <button
+                class="modal-close"
+                id="closeImageButton"
+            >
+                ✕
+            </button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <label>
+                Deskripsikan gambar yang ingin dibuat
+            </label>
+
+            <textarea
+                id="imagePrompt"
+                class="image-prompt"
+                placeholder="Contoh: Karakter Roblox sedang terbang dengan aura api super HD..."
+            ></textarea>
+
+            <div class="image-options">
+
+                <button
+                    class="prompt-chip"
+                    data-prompt="Karakter Roblox sedang terbang dengan aura api super HD, cinematic, ultra detailed, epic lighting"
+                >
+                    🔥 Aura Api
+                </button>
+
+                <button
+                    class="prompt-chip"
+                    data-prompt="Karakter Roblox menjadi dewa dengan aura energi luar biasa, cinematic, ultra HD, epic background"
+                >
+                    ⚡ Dewa
+                </button>
+
+                <button
+                    class="prompt-chip"
+                    data-prompt="Karakter Roblox sedang terbang di angkasa dengan aura energi biru dan ungu, ultra detailed, cinematic"
+                >
+                    🌌 Cosmic
+                </button>
+
+                <button
+                    class="prompt-chip"
+                    data-prompt="Karakter Roblox menjadi superhero dengan api mengelilingi tubuh, dramatic lighting, ultra HD"
+                >
+                    🦸 Superhero
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+
+            <button
+                class="btn"
+                id="cancelImageButton"
+            >
+                Batal
+            </button>
+
+            <button
+                class="btn primary"
+                id="generateImageButton"
+            >
+                ✨ Generate
+            </button>
+
+        </div>
 
     </div>
-
-    <div class="modal-body">
-
-      <label for="imagePrompt">
-        Deskripsi gambar
-      </label>
-
-      <textarea
-        class="field image-prompt"
-        id="imagePrompt"
-        placeholder="Contoh: Karakter Roblox sedang terbang dengan aura api super HD, cinematic, ultra detailed..."
-      ></textarea>
-
-      <div class="chips">
-
-        <button
-          class="chip"
-          data-prompt="Karakter Roblox sedang terbang dengan aura api super HD, cinematic, ultra detailed, epic lighting"
-        >
-          🔥 Aura Api
-        </button>
-
-        <button
-          class="chip"
-          data-prompt="Karakter Roblox menjadi dewa dengan aura energi luar biasa, cinematic, ultra HD, epic background"
-        >
-          ⚡ Dewa
-        </button>
-
-        <button
-          class="chip"
-          data-prompt="Karakter Roblox sedang terbang di angkasa dengan aura energi biru dan ungu, ultra detailed, cinematic"
-        >
-          🌌 Cosmic
-        </button>
-
-        <button
-          class="chip"
-          data-prompt="Karakter Roblox menjadi superhero dengan api mengelilingi tubuh, dramatic lighting, ultra HD"
-        >
-          🦸 Superhero
-        </button>
-
-      </div>
-
-    </div>
-
-    <div class="modal-foot">
-
-      <button
-        class="btn"
-        data-close="imageModal"
-      >
-        Batal
-      </button>
-
-      <button
-        class="btn primary"
-        id="generateImageBtn"
-      >
-        ✨ Generate
-      </button>
-
-    </div>
-
-  </div>
 
 </div>
 
 <div
-  class="modal"
-  id="memoryModal"
+    class="modal"
+    id="memoryModal"
 >
 
-  <div class="modal-box">
+    <div class="modal-box">
 
-    <div class="modal-head">
+        <div class="modal-header">
 
-      <div class="modal-title">
-        🧠 Global Memory
-      </div>
+            <div class="modal-title">
+                🧠 Global Memory
+            </div>
 
-      <button
-        class="close"
-        data-close="memoryModal"
-      >
-        ✕
-      </button>
+            <button
+                class="modal-close"
+                id="closeMemoryButton"
+            >
+                ✕
+            </button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <label>
+                Nama pengguna
+            </label>
+
+            <input
+                id="memoryName"
+                class="image-prompt"
+                style="min-height:45px"
+                placeholder="Contoh: Ernest"
+                autocomplete="off"
+            >
+
+            <br><br>
+
+            <label>
+                Informasi lain
+            </label>
+
+            <textarea
+                id="memoryFacts"
+                class="memory-textarea"
+                placeholder="Saya suka coding&#10;Saya sering menggunakan ESP32&#10;Saya membuat website AI"
+            ></textarea>
+
+        </div>
+
+        <div class="modal-footer">
+
+            <button
+                class="btn"
+                id="clearMemoryButton"
+            >
+                Hapus Memory
+            </button>
+
+            <button
+                class="btn primary"
+                id="saveMemoryButton"
+            >
+                💾 Simpan
+            </button>
+
+        </div>
 
     </div>
-
-    <div class="modal-body">
-
-      <label for="memoryName">
-        Nama pengguna
-      </label>
-
-      <input
-        class="field memory-name"
-        id="memoryName"
-        placeholder="Contoh: Pengguna Power AI"
-        autocomplete="off"
-      >
-
-      <label for="memoryFacts">
-        Informasi yang ingin diingat
-      </label>
-
-      <textarea
-        class="field image-prompt"
-        id="memoryFacts"
-        placeholder="Saya suka coding&#10;Saya sering menggunakan ESP32&#10;Saya membuat website AI"
-      ></textarea>
-
-    </div>
-
-    <div class="modal-foot">
-
-      <button
-        class="btn danger"
-        id="clearMemoryBtn"
-      >
-        Hapus Memory
-      </button>
-
-      <button
-        class="btn primary"
-        id="saveMemoryBtn"
-      >
-        💾 Simpan
-      </button>
-
-    </div>
-
-  </div>
 
 </div>
 
 <div
-  class="toast"
-  id="toast"
+    class="toast"
+    id="toast"
 ></div>
 
 <script>
-(function(){
+"use strict";
 
-  "use strict";
+const CHAT_KEY = "power_ai_super_chats_v3";
+const CURRENT_KEY = "power_ai_super_current_v3";
+const MEMORY_KEY = "power_ai_global_memory";
 
-  var CHAT_KEY =
-    "power_ai_chats_v3";
-
-  var CURRENT_KEY =
-    "power_ai_current_v3";
-
-  var MEMORY_KEY =
-    "power_ai_global_memory_v3";
-
-  var LEGACY_KEYS = [
-    "power_ai_chats",
+const LEGACY_KEYS = [
+    "power_ai_super_chats_v2",
     "power_ai_super_chats",
+    "power_ai_chats",
     "ernest_chats",
     "power_chats",
     "chat_history"
-  ];
+];
 
-  var LEGACY_CURRENT = [
-    "power_ai_current_chat",
+const LEGACY_CURRENT_KEYS = [
+    "power_ai_super_current_v2",
     "power_ai_super_current",
+    "power_ai_current_chat",
     "ernest_current_chat",
     "power_current_chat"
-  ];
+];
 
-  var chats = [];
-  var currentId = null;
-  var loading = false;
-  var controller = null;
-  var recognition = null;
-  var toastTimer = null;
+let chats = [];
+let currentId = null;
+let memory = {
+    name:"",
+    facts:[]
+};
 
-  var el = {
+let sending = false;
+let abortController = null;
+let recognition = null;
 
-    sidebar:
-      document.getElementById(
-        "sidebar"
-      ),
+const sidebar =
+    document.getElementById("sidebar");
 
-    chat:
-      document.getElementById(
-        "chat"
-      ),
+const overlay =
+    document.getElementById("sidebarOverlay");
 
-    chatInner:
-      document.getElementById(
-        "chatInner"
-      ),
+const chatElement =
+    document.getElementById("chat");
 
-    history:
-      document.getElementById(
-        "history"
-      ),
+const chatInner =
+    document.getElementById("chatInner");
 
-    historySearch:
-      document.getElementById(
-        "historySearch"
-      ),
+const input =
+    document.getElementById("messageInput");
 
-    input:
-      document.getElementById(
-        "messageInput"
-      ),
+const sendButton =
+    document.getElementById("sendButton");
 
-    send:
-      document.getElementById(
-        "sendBtn"
-      ),
+const stopButton =
+    document.getElementById("stopButton");
 
-    stop:
-      document.getElementById(
-        "stopBtn"
-      ),
+const webSearch =
+    document.getElementById("webSearch");
 
-    search:
-      document.getElementById(
-        "webSearch"
-      ),
+const historyList =
+    document.getElementById("historyList");
 
-    status:
-      document.getElementById(
-        "statusText"
-      ),
+const historySearch =
+    document.getElementById("historySearch");
 
-    toast:
-      document.getElementById(
-        "toast"
-      ),
+const statusText =
+    document.getElementById("statusText");
 
-    imageModal:
-      document.getElementById(
-        "imageModal"
-      ),
+const imageModal =
+    document.getElementById("imageModal");
 
-    memoryModal:
-      document.getElementById(
-        "memoryModal"
-      ),
+const memoryModal =
+    document.getElementById("memoryModal");
 
-    imagePrompt:
-      document.getElementById(
-        "imagePrompt"
-      ),
+const imagePrompt =
+    document.getElementById("imagePrompt");
 
-    generateImage:
-      document.getElementById(
-        "generateImageBtn"
-      ),
+const generateImageButton =
+    document.getElementById("generateImageButton");
 
-    memoryName:
-      document.getElementById(
-        "memoryName"
-      ),
+const memoryName =
+    document.getElementById("memoryName");
 
-    memoryFacts:
-      document.getElementById(
-        "memoryFacts"
-      ),
-
-    saveMemory:
-      document.getElementById(
-        "saveMemoryBtn"
-      ),
-
-    clearMemory:
-      document.getElementById(
-        "clearMemoryBtn"
-      )
-
-  };
-
-  function id(){
-
-    return (
-      Date.now().toString(36) +
-      Math.random()
-        .toString(36)
-        .slice(2,10)
-    );
-
-  }
-
-  function toast(message){
-
-    el.toast.textContent =
-      message;
-
-    el.toast.classList.add(
-      "show"
-    );
-
-    clearTimeout(
-      toastTimer
-    );
-
-    toastTimer =
-      setTimeout(function(){
-
-        el.toast.classList.remove(
-          "show"
-        );
-
-      },2400);
-
-  }
-
-  function escapeHTML(value){
-
-    return String(value)
-
-      .replace(
-        /&/g,
-        "&amp;"
-      )
-
-      .replace(
-        /</g,
-        "&lt;"
-      )
-
-      .replace(
-        />/g,
-        "&gt;"
-      )
-
-      .replace(
-        /"/g,
-        "&quot;"
-      )
-
-      .replace(
-        /'/g,
-        "&#039;"
-      );
-
-  }
-
-  function cleanMessage(message){
-
-    if(
-      !message ||
-      typeof message !==
-      "object"
-    ){
-      return null;
-    }
-
-    if(
-      message.role !==
-        "user" &&
-      message.role !==
-        "assistant"
-    ){
-      return null;
-    }
-
-    if(
-      typeof message.content !==
-        "string" ||
-      !message.content.trim()
-    ){
-      return null;
-    }
-
-    return {
-
-      role:
-        message.role,
-
-      content:
-        message.content,
-
-      image:
-        typeof message.image ===
-        "string"
-          ? message.image
-          : "",
-
-      imagePrompt:
-        typeof message.imagePrompt ===
-        "string"
-          ? message.imagePrompt
-          : ""
-
-    };
-
-  }
-
-  function cleanChat(chat){
-
-    if(
-      !chat ||
-      typeof chat !==
-      "object"
-    ){
-      return null;
-    }
-
-    var messages =
-      Array.isArray(chat.messages)
-        ? chat.messages
-            .map(cleanMessage)
-            .filter(Boolean)
-        : [];
-
-    return {
-
-      id:
-        typeof chat.id ===
-          "string" &&
-        chat.id
-          ? chat.id
-          : id(),
-
-      title:
-        typeof chat.title ===
-          "string" &&
-        chat.title.trim()
-          ? chat.title.trim()
-          : "Chat Baru",
-
-      messages:
-        messages,
-
-      createdAt:
-        Number(chat.createdAt) ||
-        Date.now(),
-
-      updatedAt:
-        Number(chat.updatedAt) ||
-        Date.now()
-
-    };
-
-  }
-
-  function parseStored(raw){
-
-    if(!raw){
-      return null;
-    }
-
-    try{
-
-      var parsed =
-        JSON.parse(raw);
-
-      if(
-        Array.isArray(parsed)
-      ){
-        return parsed;
-      }
-
-      if(
-        parsed &&
-        Array.isArray(
-          parsed.chats
-        )
-      ){
-        return parsed.chats;
-      }
-
-    }catch(error){
-
-      console.warn(
-        "Storage rusak:",
-        error
-      );
-
-    }
-
-    return null;
-
-  }
-
-  function normalizeChats(list){
-
-    return (
-      Array.isArray(list)
-        ? list
-        : []
-    )
-      .map(cleanChat)
-      .filter(Boolean);
-
-  }
-
-  function loadMemory(){
-
-    var empty = {
-      name:"",
-      facts:[]
-    };
-
-    try{
-
-      var raw =
-        localStorage.getItem(
-          MEMORY_KEY
-        );
-
-      if(!raw){
-        return empty;
-      }
-
-      var data =
-        JSON.parse(raw);
-
-      return {
-
-        name:
-          typeof data.name ===
-          "string"
-            ? data.name
-                .trim()
-                .slice(0,100)
-            : "",
-
-        facts:
-          Array.isArray(
-            data.facts
-          )
-
-            ? data.facts
-
-                .filter(
-                  function(x){
-                    return (
-                      typeof x ===
-                      "string" &&
-                      x.trim()
-                    );
-                  }
-                )
-
-                .map(
-                  function(x){
-                    return x
-                      .trim()
-                      .slice(0,500);
-                  }
-                )
-
-                .slice(0,50)
-
-            : []
-
-      };
-
-    }catch(error){
-
-      return empty;
-
-    }
-
-  }
-
-  function saveMemory(memory){
-
-    var clean = {
-
-      name:
-        typeof memory.name ===
-        "string"
-          ? memory.name
-              .trim()
-              .slice(0,100)
-          : "",
-
-      facts:
-        Array.isArray(
-          memory.facts
-        )
-
-          ? memory.facts
-
-              .filter(
-                function(x){
-                  return (
-                    typeof x ===
-                    "string" &&
-                    x.trim()
-                  );
-                }
-              )
-
-              .map(
-                function(x){
-                  return x
-                    .trim()
-                    .slice(0,500);
-                }
-              )
-
-              .slice(0,50)
-
-          : []
-
-    };
-
-    localStorage.setItem(
-      MEMORY_KEY,
-      JSON.stringify(clean)
-    );
-
-  }
-
-  function loadState(){
-
-    var parsed =
-      parseStored(
-        localStorage.getItem(
-          CHAT_KEY
-        )
-      );
-
-    if(!parsed){
-
-      var i;
-
-      for(
-        i = 0;
-        i < LEGACY_KEYS.length;
-        i++
-      ){
-
-        parsed =
-          parseStored(
-            localStorage.getItem(
-              LEGACY_KEYS[i]
-            )
-          );
-
-        if(
-          parsed &&
-          parsed.length
-        ){
-          break;
-        }
-
-      }
-
-    }
-
-    chats =
-      normalizeChats(
-        parsed || []
-      );
-
-    currentId =
-      localStorage.getItem(
-        CURRENT_KEY
-      );
-
-    if(!currentId){
-
-      var j;
-
-      for(
-        j = 0;
-        j < LEGACY_CURRENT.length;
-        j++
-      ){
-
-        currentId =
-          localStorage.getItem(
-            LEGACY_CURRENT[j]
-          );
-
-        if(currentId){
-          break;
-        }
-
-      }
-
-    }
-
-    if(
-      !currentId ||
-      !chats.some(
-        function(c){
-          return (
-            c.id ===
-            currentId
-          );
-        }
-      )
-    ){
-
-      currentId =
-        chats.length
-          ? chats[0].id
-          : null;
-
-    }
-
-    if(!chats.length){
-
-      createChat(false);
-
-    }
-
-    saveState();
-
-  }
-
-  function saveState(){
-
-    try{
-
-      var clean =
-        normalizeChats(
-          chats
-        );
-
-      var total = 0;
-      var i;
-      var j;
-
-      for(
-        i=0;
-        i<clean.length;
-        i++
-      ){
-
-        for(
-          j=0;
-          j<clean[i]
-            .messages
-            .length;
-          j++
-        ){
-
-          total +=
-            clean[i]
-              .messages[j]
-              .content
-              .length;
-
-          if(
-            clean[i]
-              .messages[j]
-              .image
-          ){
-
-            total +=
-              clean[i]
-                .messages[j]
-                .image
-                .length;
-
-          }
-
-        }
-
-      }
-
-      if(
-        total >
-        4200000
-      ){
-
-        for(
-          i=0;
-          i<clean.length;
-          i++
-        ){
-
-          for(
-            j=0;
-            j<
-            clean[i]
-              .messages
-              .length;
-            j++
-          ){
-
-            if(
-              clean[i]
-                .messages[j]
-                .image &&
-              clean[i]
-                .messages[j]
-                .image
-                .length >
-              300000
-            ){
-
-              clean[i]
-                .messages[j]
-                .image =
-                "";
-
-            }
-
-          }
-
-        }
-
-      }
-
-      chats = clean;
-
-      localStorage.setItem(
-        CHAT_KEY,
-        JSON.stringify(
-          chats
-        )
-      );
-
-      localStorage.setItem(
-        CURRENT_KEY,
-        currentId || ""
-      );
-
-    }catch(error){
-
-      console.error(
-        "SAVE ERROR:",
-        error
-      );
-
-      try{
-
-        var reduced =
-          chats.map(
-            function(chat){
-
-              var copy =
-                cleanChat(
-                  chat
-                );
-
-              copy.messages =
-                copy.messages.map(
-                  function(m){
-
-                    return {
-
-                      role:
-                        m.role,
-
-                      content:
-                        m.content,
-
-                      image:
-                        "",
-
-                      imagePrompt:
-                        m.imagePrompt
-
-                    };
-
-                  }
-                );
-
-              return copy;
-
-            }
-          );
-
-        localStorage.setItem(
-          CHAT_KEY,
-          JSON.stringify(
-            reduced
-          )
-        );
-
-        localStorage.setItem(
-          CURRENT_KEY,
-          currentId || ""
-        );
-
-        chats = reduced;
-
-        toast(
-          "History tersimpan. Gambar besar tidak disimpan di browser."
-        );
-
-      }catch(second){
-
-        console.error(
-          second
-        );
-
-        toast(
-          "Storage browser penuh. Export history lalu hapus beberapa chat."
-        );
-
-      }
-
-    }
-
-  }
-
-  function currentChat(){
-
-    return (
-      chats.find(
-        function(c){
-          return (
-            c.id ===
-            currentId
-          );
-        }
-      ) ||
-      null
-    );
-
-  }
-
-  function createChat(
-    renderIt
-  ){
-
-    var chat = {
-
-      id:id(),
-
-      title:
-        "Chat Baru",
-
-      messages:[],
-
-      createdAt:
-        Date.now(),
-
-      updatedAt:
-        Date.now()
-
-    };
-
-    chats.unshift(
-      chat
-    );
-
-    currentId =
-      chat.id;
-
-    saveState();
-
-    if(
-      renderIt !==
-      false
-    ){
-
-      renderHistory();
-      renderChat();
-
-    }
-
-    return chat;
-
-  }
-
-  function newChat(){
-
-    if(loading){
-
-      toast(
-        "Tunggu proses selesai dulu."
-      );
-
-      return;
-
-    }
-
-    createChat(
-      true
-    );
-
-    closeSidebar();
-
-    el.input.focus();
-
-  }
-
-  function renderHistory(){
-
-    el.history.innerHTML =
-      "";
-
-    var q =
-      el.historySearch
-        .value
-        .trim()
-        .toLowerCase();
-
-    var list =
-      chats
-
-        .slice()
-
-        .sort(
-          function(a,b){
-            return (
-              b.updatedAt -
-              a.updatedAt
-            );
-          }
-        )
-
-        .filter(
-          function(chat){
-
-            if(!q){
-              return true;
-            }
-
-            if(
-              chat.title
-                .toLowerCase()
-                .includes(q)
-            ){
-              return true;
-            }
-
-            return chat
-              .messages
-              .some(
-                function(m){
-                  return m.content
-                    .toLowerCase()
-                    .includes(q);
-                }
-              );
-
-          }
-        );
-
-    if(!list.length){
-
-      var empty =
-        document.createElement(
-          "div"
-        );
-
-      empty.className =
-        "history-empty";
-
-      empty.textContent =
-        "Tidak ada chat.";
-
-      el.history.appendChild(
-        empty
-      );
-
-      return;
-
-    }
-
-    list.forEach(
-      function(chat){
-
-        var row =
-          document.createElement(
-            "div"
-          );
-
-        row.className =
-          "history-row" +
-          (
-            chat.id ===
-            currentId
-              ? " active"
-              : ""
-          );
-
-        var open =
-          document.createElement(
-            "button"
-          );
-
-        open.className =
-          "history-open";
-
-        open.textContent =
-          chat.title;
-
-        open.addEventListener(
-          "click",
-          function(){
-
-            if(loading){
-
-              toast(
-                "Tunggu proses selesai dulu."
-              );
-
-              return;
-
-            }
-
-            currentId =
-              chat.id;
-
-            saveState();
-            renderHistory();
-            renderChat();
-            closeSidebar();
-
-          }
-        );
-
-        var del =
-          document.createElement(
-            "button"
-          );
-
-        del.className =
-          "history-delete";
-
-        del.textContent =
-          "✕";
-
-        del.title =
-          "Hapus chat";
-
-        del.addEventListener(
-          "click",
-          function(event){
-
-            event.stopPropagation();
-
-            deleteChat(
-              chat.id
-            );
-
-          }
-        );
-
-        row.appendChild(
-          open
-        );
-
-        row.appendChild(
-          del
-        );
-
-        el.history.appendChild(
-          row
-        );
-
-      }
-    );
-
-  }
-
-  function deleteChat(
-    chatId
-  ){
-
-    if(loading){
-
-      toast(
-        "Tunggu proses selesai dulu."
-      );
-
-      return;
-
-    }
-
-    var target =
-      chats.find(
-        function(c){
-          return (
-            c.id ===
-            chatId
-          );
-        }
-      );
-
-    if(!target){
-      return;
-    }
-
-    if(
-      !confirm(
-        "Hapus chat \"" +
-        target.title +
-        "\"?"
-      )
-    ){
-      return;
-    }
-
-    chats =
-      chats.filter(
-        function(c){
-          return (
-            c.id !==
-            chatId
-          );
-        }
-      );
-
-    if(!chats.length){
-
-      createChat(
-        false
-      );
-
-    }
-
-    if(
-      currentId ===
-      chatId
-    ){
-
-      currentId =
-        chats[0].id;
-
-    }
-
-    saveState();
-
-    renderHistory();
-    renderChat();
-
-  }
-
-  function clearAllChats(){
-
-    if(loading){
-
-      toast(
-        "Tunggu proses selesai dulu."
-      );
-
-      return;
-
-    }
-
-    if(
-      !confirm(
-        "Yakin hapus SEMUA riwayat chat?"
-      )
-    ){
-      return;
-    }
-
-    chats = [];
-    currentId = null;
-
-    createChat(
-      false
-    );
-
-    saveState();
-
-    renderHistory();
-    renderChat();
-
-    toast(
-      "Semua chat dihapus."
-    );
-
-  }
-
-  function renderWelcome(){
-
-    el.chatInner.innerHTML =
-      "";
-
-    var wrap =
-      document.createElement(
-        "div"
-      );
-
-    wrap.className =
-      "welcome";
-
-    wrap.innerHTML =
-      "<div class=\"welcome-icon\">⚡</div>" +
-      "<h1>Halo, saya Power AI</h1>" +
-      "<p>AI Assistant untuk coding, ESP32, Arduino, website, debugging, ide, pencarian web, voice, memory, dan pembuatan gambar.</p>";
-
-    var grid =
-      document.createElement(
-        "div"
-      );
-
-    grid.className =
-      "quick-grid";
-
-    var items = [
-
-      [
-        "🌐",
-        "Buat Website",
-        "Buatkan saya website modern yang keren"
-      ],
-
-      [
-        "🐛",
-        "Debugging",
-        "Bantu saya debugging kode ini"
-      ],
-
-      [
-        "🔌",
-        "ESP32",
-        "Buatkan program ESP32 lengkap"
-      ],
-
-      [
-        "🎨",
-        "Buat Gambar",
-        "__IMAGE__"
-      ]
-
-    ];
-
-    items.forEach(
-      function(item){
-
-        var button =
-          document.createElement(
-            "button"
-          );
-
-        button.className =
-          "quick";
-
-        button.textContent =
-          item[0] +
-          " " +
-          item[1];
-
-        button.addEventListener(
-          "click",
-          function(){
-
-            if(
-              item[2] ===
-              "__IMAGE__"
-            ){
-
-              openImageModal();
-
-            }else{
-
-              quickAsk(
-                item[2]
-              );
-
-            }
-
-          }
-        );
-
-        grid.appendChild(
-          button
-        );
-
-      }
-    );
-
-    wrap.appendChild(
-      grid
-    );
-
-    el.chatInner.appendChild(
-      wrap
-    );
-
-  }
-
-  function renderMarkdown(
-    text
-  ){
-
-    var source =
-      escapeHTML(
-        text
-      );
-
-    var blocks = [];
-
-    var tick =
-      String.fromCharCode(
-        96
-      );
-
-    var fence =
-      tick +
-      tick +
-      tick;
-
-    var fenceRe =
-      new RegExp(
-        fence +
-        "([a-zA-Z0-9_+#.-]*)\\n?([\\s\\S]*?)" +
-        fence,
-        "g"
-      );
-
-    source =
-      source.replace(
-        fenceRe,
-        function(
-          match,
-          lang,
-          code
-        ){
-
-          var index =
-            blocks.length;
-
-          blocks.push({
-            lang:
-              lang ||
-              "code",
-            code:
-              code.replace(
-                /\n$/,
-                ""
-              )
-          });
-
-          return (
-            "@@CODE_" +
-            index +
-            "@@"
-          );
-
-        }
-      );
-
-    source =
-      source.replace(
-        new RegExp(
-          tick +
-          "([^" +
-          tick +
-          "\\n]+)" +
-          tick,
-          "g"
-        ),
-        "<span class=\"inline-code\">$1</span>"
-      );
-
-    source =
-      source.replace(
-        /^### (.*)$/gm,
-        "<h3>$1</h3>"
-      );
-
-    source =
-      source.replace(
-        /^## (.*)$/gm,
-        "<h2>$1</h2>"
-      );
-
-    source =
-      source.replace(
-        /^# (.*)$/gm,
-        "<h1>$1</h1>"
-      );
-
-    source =
-      source.replace(
-        /\*\*(.*?)\*\*/g,
-        "<strong>$1</strong>"
-      );
-
-    source =
-      source.replace(
-        /\*(.*?)\*/g,
-        "<em>$1</em>"
-      );
-
-    source =
-      source.replace(
-        /^> (.*)$/gm,
-        "<blockquote>$1</blockquote>"
-      );
-
-    source =
-      source.replace(
-        /^\s*[-*] (.*)$/gm,
-        "<li>$1</li>"
-      );
-
-    source =
-      source.replace(
-        /((?:<li>.*<\/li>\s*)+)/gs,
-        "<ul>$1</ul>"
-      );
-
-    source =
-      source.replace(
-        /\n\n+/g,
-        "</p><p>"
-      );
-
-    source =
-      "<p>" +
-      source +
-      "</p>";
-
-    source =
-      source.replace(
-        /\n/g,
-        "<br>"
-      );
-
-    blocks.forEach(
-      function(
-        block,
-        index
-      ){
-
-        var codeHtml =
-          "<div class=\"code-wrap\">" +
-          "<div class=\"code-head\">" +
-          "<span>" +
-          escapeHTML(
-            block.lang
-          ) +
-          "</span>" +
-          "<button class=\"code-copy\" data-code=\"" +
-          encodeURIComponent(
-            block.code
-          ) +
-          "\">Copy</button>" +
-          "</div>" +
-          "<pre class=\"code-pre\">" +
-          escapeHTML(
-            block.code
-          ) +
-          "</pre>" +
-          "</div>";
-
-        source =
-          source.replace(
-            "@@CODE_" +
-            index +
-            "@@",
-            codeHtml
-          );
-
-      }
-    );
-
-    return source;
-
-  }
-
-  function addImageElement(
-    contentBox,
-    imageData,
-    prompt
-  ){
-
-    var img =
-      document.createElement(
-        "img"
-      );
-
-    img.className =
-      "generated-image";
-
-    img.src =
-      imageData;
-
-    img.alt =
-      prompt ||
-      "Power AI generated image";
-
-    img.loading =
-      "lazy";
-
-    contentBox.appendChild(
-      img
-    );
-
-    var tools =
-      document.createElement(
-        "div"
-      );
-
-    tools.className =
-      "image-tools";
-
-    var download =
-      document.createElement(
-        "button"
-      );
-
-    download.textContent =
-      "⬇️ Download";
-
-    download.addEventListener(
-      "click",
-      function(){
-
-        var a =
-          document.createElement(
-            "a"
-          );
-
-        a.href =
-          imageData;
-
-        a.download =
-          "power-ai-image.png";
-
-        document.body.appendChild(
-          a
-        );
-
-        a.click();
-
-        a.remove();
-
-      }
-    );
-
-    var open =
-      document.createElement(
-        "button"
-      );
-
-    open.textContent =
-      "🔗 Buka";
-
-    open.addEventListener(
-      "click",
-      function(){
-
-        var win =
-          window.open(
-            imageData,
-            "_blank"
-          );
-
-        if(!win){
-
-          toast(
-            "Popup diblokir browser."
-          );
-
-        }
-
-      }
-    );
-
-    tools.appendChild(
-      download
-    );
-
-    tools.appendChild(
-      open
-    );
-
-    contentBox.appendChild(
-      tools
-    );
-
-  }
-
-  function addMessageToDOM(
-    message,
-    index
-  ){
-
-    var row =
-      document.createElement(
-        "div"
-      );
-
-    row.className =
-      "message " +
-      message.role;
-
-    var avatar =
-      document.createElement(
-        "div"
-      );
-
-    avatar.className =
-      "avatar";
-
-    avatar.textContent =
-      message.role ===
-      "user"
-        ? "U"
-        : "⚡";
-
-    var content =
-      document.createElement(
-        "div"
-      );
-
-    content.className =
-      "content";
-
-    var bubble =
-      document.createElement(
-        "div"
-      );
-
-    bubble.className =
-      "bubble";
-
-    if(
-      message.role ===
-      "assistant"
-    ){
-
-      bubble.innerHTML =
-        renderMarkdown(
-          message.content
-        );
-
-    }else{
-
-      bubble.textContent =
-        message.content;
-
-    }
-
-    content.appendChild(
-      bubble
-    );
-
-    var actions =
-      document.createElement(
-        "div"
-      );
-
-    actions.className =
-      "actions";
-
-    var copy =
-      document.createElement(
-        "button"
-      );
-
-    copy.textContent =
-      "📋 Copy";
-
-    copy.addEventListener(
-      "click",
-      function(){
-
-        copyText(
-          message.content
-        );
-
-      }
-    );
-
-    actions.appendChild(
-      copy
-    );
-
-    if(
-      message.role ===
-      "assistant"
-    ){
-
-      var speak =
-        document.createElement(
-          "button"
-        );
-
-      speak.textContent =
-        "🔊 Baca";
-
-      speak.addEventListener(
-        "click",
-        function(){
-
-          speakText(
-            message.content
-          );
-
-        }
-      );
-
-      actions.appendChild(
-        speak
-      );
-
-      var regen =
-        document.createElement(
-          "button"
-        );
-
-      regen.textContent =
-        "🔄 Regenerate";
-
-      regen.addEventListener(
-        "click",
-        function(){
-
-          regenerate(
-            index
-          );
-
-        }
-      );
-
-      actions.appendChild(
-        regen
-      );
-
-    }else{
-
-      var edit =
-        document.createElement(
-          "button"
-        );
-
-      edit.textContent =
-        "✏️ Edit";
-
-      edit.addEventListener(
-        "click",
-        function(){
-
-          editUser(
-            index
-          );
-
-        }
-      );
-
-      actions.appendChild(
-        edit
-      );
-
-    }
-
-    content.appendChild(
-      actions
-    );
-
-    if(
-      message.image
-    ){
-
-      addImageElement(
-        content,
-        message.image,
-        message.imagePrompt
-      );
-
-    }
-
-    row.appendChild(
-      avatar
-    );
-
-    row.appendChild(
-      content
-    );
-
-    el.chatInner.appendChild(
-      row
-    );
-
-  }
-
-  function renderChat(){
-
-    var chat =
-      currentChat();
-
-    el.chatInner.innerHTML =
-      "";
-
-    if(
-      !chat ||
-      !chat.messages.length
-    ){
-
-      renderWelcome();
-
-      return;
-
-    }
-
-    chat.messages.forEach(
-      function(
-        message,
-        index
-      ){
-
-        addMessageToDOM(
-          message,
-          index
-        );
-
-      }
-    );
-
-    scrollBottom();
-
-  }
-
-  function scrollBottom(){
-
-    setTimeout(
-      function(){
-
-        el.chat.scrollTop =
-          el.chat.scrollHeight;
-
-      },
-      30
-    );
-
-  }
-
-  function setLoading(
-    state
-  ){
-
-    loading =
-      state;
-
-    el.send.disabled =
-      state;
-
-    el.stop.classList.toggle(
-      "show",
-      state
-    );
-
-    el.status.textContent =
-      state
-        ? "BERPIKIR..."
-        : "ONLINE";
-
-  }
-
-  function showTyping(){
-
-    removeTyping();
-
-    var row =
-      document.createElement(
-        "div"
-      );
-
-    row.className =
-      "typing";
-
-    row.id =
-      "typingIndicator";
-
-    row.innerHTML =
-      "<div class=\"avatar\">⚡</div>" +
-      "<div class=\"dots\">" +
-      "<i></i><i></i><i></i>" +
-      "</div>" +
-      "<span>Power AI sedang berpikir...</span>";
-
-    el.chatInner.appendChild(
-      row
-    );
-
-    scrollBottom();
-
-  }
-
-  function removeTyping(){
-
-    var x =
-      document.getElementById(
-        "typingIndicator"
-      );
-
-    if(x){
-      x.remove();
-    }
-
-  }
-
-  async function sendMessage(){
-
-    if(loading){
-      return;
-    }
-
-    var text =
-      el.input.value
-        .trim();
-
-    if(!text){
-      return;
-    }
-
-    var chat =
-      currentChat() ||
-      createChat(false);
-
-    if(
-      chat.title ===
-      "Chat Baru"
-    ){
-
-      chat.title =
-        text.slice(
-          0,
-          50
-        );
-
-    }
-
-    chat.messages.push({
-      role:
-        "user",
-      content:
-        text
-    });
-
-    chat.updatedAt =
-      Date.now();
-
-    saveState();
-
-    el.input.value =
-      "";
-
-    resizeInput();
-
-    renderHistory();
-    renderChat();
-
-    setLoading(true);
-
-    showTyping();
-
-    controller =
-      new AbortController();
-
-    try{
-
-      var response =
-        await fetch(
-          "/chat",
-          {
-            method:
-              "POST",
-
-            headers:{
-              "Content-Type":
-                "application/json"
-            },
-
-            body:
-              JSON.stringify({
-
-                messages:
-                  chat.messages,
-
-                memory:
-                  loadMemory(),
-
-                webSearch:
-                  el.search.checked
-
-              }),
-
-            signal:
-              controller.signal
-
-          }
-        );
-
-      var data =
-        await response
-          .json()
-          .catch(
-            function(){
-              return {};
-            }
-          );
-
-      removeTyping();
-
-      if(
-        !response.ok ||
-        !data.success
-      ){
-
-        throw new Error(
-          data.error ||
-          "Power AI gagal menjawab."
-        );
-
-      }
-
-      chat =
-        currentChat();
-
-      if(!chat){
-
-        throw new Error(
-          "Chat aktif tidak ditemukan."
-        );
-
-      }
-
-      if(
-        data.memory
-      ){
-
-        saveMemory(
-          data.memory
-        );
-
-      }
-
-      chat.messages.push({
-        role:
-          "assistant",
-        content:
-          String(
-            data.reply ||
-            "Power AI tidak memberikan jawaban."
-          )
-      });
-
-      chat.updatedAt =
-        Date.now();
-
-      saveState();
-
-      renderHistory();
-      renderChat();
-
-      scrollBottom();
-
-    }catch(error){
-
-      removeTyping();
-
-      if(
-        error.name ===
-        "AbortError"
-      ){
-
-        toast(
-          "Generasi dihentikan."
-        );
-
-      }else{
-
-        var active =
-          currentChat();
-
-        if(active){
-
-          active.messages.push({
-
-            role:
-              "assistant",
-
-            content:
-              "⚠️ " +
-              (
-                error.message ||
-                "Terjadi kesalahan."
-              )
-
-          });
-
-          active.updatedAt =
-            Date.now();
-
-          saveState();
-
-          renderChat();
-
-        }
-
-        toast(
-          error.message ||
-          "Power AI mengalami error."
-        );
-
-        console.error(
-          "CHAT ERROR:",
-          error
-        );
-
-      }
-
-    }finally{
-
-      controller =
-        null;
-
-      setLoading(
-        false
-      );
-
-    }
-
-  }
-
-  function regenerate(
-    index
-  ){
-
-    if(loading){
-
-      toast(
-        "Tunggu proses sebelumnya selesai."
-      );
-
-      return;
-
-    }
-
-    var chat =
-      currentChat();
-
-    if(
-      !chat ||
-      !chat.messages[index] ||
-      chat.messages[index].role !==
-        "assistant"
-    ){
-
-      return;
-
-    }
-
-    chat.messages.splice(
-      index,
-      1
-    );
-
-    chat.updatedAt =
-      Date.now();
-
-    saveState();
-
-    renderChat();
-
-    setLoading(true);
-
-    showTyping();
-
-    controller =
-      new AbortController();
-
-    fetch(
-      "/chat",
-      {
-        method:
-          "POST",
-
-        headers:{
-          "Content-Type":
-            "application/json"
-        },
-
-        body:
-          JSON.stringify({
-
-            messages:
-              chat.messages,
-
-            memory:
-              loadMemory(),
-
-            webSearch:
-              el.search.checked
-
-          }),
-
-        signal:
-          controller.signal
-
-      }
-    )
-
-      .then(
-        function(response){
-
-          return response
-            .json()
-            .then(
-              function(data){
-
-                if(
-                  !response.ok ||
-                  !data.success
-                ){
-
-                  throw new Error(
-                    data.error ||
-                    "Regenerate gagal."
-                  );
-
-                }
-
-                return data;
-
-              }
-            );
-
-        }
-      )
-
-      .then(
-        function(data){
-
-          removeTyping();
-
-          var active =
-            currentChat();
-
-          if(!active){
-            return;
-          }
-
-          if(
-            data.memory
-          ){
-
-            saveMemory(
-              data.memory
-            );
-
-          }
-
-          active.messages.push({
-
-            role:
-              "assistant",
-
-            content:
-              String(
-                data.reply ||
-                "Tidak ada jawaban."
-              )
-
-          });
-
-          active.updatedAt =
-            Date.now();
-
-          saveState();
-
-          renderChat();
-          renderHistory();
-
-        }
-      )
-
-      .catch(
-        function(error){
-
-          removeTyping();
-
-          if(
-            error.name ===
-            "AbortError"
-          ){
-
-            toast(
-              "Regenerate dihentikan."
-            );
-
-          }else{
-
-            toast(
-              error.message ||
-              "Regenerate gagal."
-            );
-
-            console.error(
-              "REGENERATE ERROR:",
-              error
-            );
-
-          }
-
-        }
-      )
-
-      .finally(
-        function(){
-
-          controller =
-            null;
-
-          setLoading(
-            false
-          );
-
-        }
-      );
-
-  }
-
-  function editUser(
-    index
-  ){
-
-    if(loading){
-      return;
-    }
-
-    var chat =
-      currentChat();
-
-    if(
-      !chat ||
-      !chat.messages[index] ||
-      chat.messages[index].role !==
-        "user"
-    ){
-
-      return;
-
-    }
-
-    el.input.value =
-      chat.messages[index]
-        .content;
-
-    chat.messages.splice(
-      index,
-      1
-    );
-
-    chat.updatedAt =
-      Date.now();
-
-    saveState();
-
-    renderChat();
-
-    resizeInput();
-
-    el.input.focus();
-
-    toast(
-      "Pesan dimasukkan kembali untuk diedit."
-    );
-
-  }
-
-  function copyText(
-    value
-  ){
-
-    if(
-      navigator.clipboard &&
-      navigator.clipboard.writeText
-    ){
-
-      navigator.clipboard
-        .writeText(
-          value
-        )
-
-        .then(
-          function(){
-
-            toast(
-              "📋 Teks berhasil disalin."
-            );
-
-          }
-        )
-
-        .catch(
-          function(){
-
-            fallbackCopy(
-              value
-            );
-
-          }
-        );
-
-    }else{
-
-      fallbackCopy(
-        value
-      );
-
-    }
-
-  }
-
-  function fallbackCopy(
-    value
-  ){
-
-    var area =
-      document.createElement(
-        "textarea"
-      );
-
-    area.value =
-      value;
-
-    document.body.appendChild(
-      area
-    );
-
-    area.select();
-
-    try{
-
-      document.execCommand(
-        "copy"
-      );
-
-      toast(
-        "📋 Teks berhasil disalin."
-      );
-
-    }catch(error){
-
-      toast(
-        "Gagal menyalin teks."
-      );
-
-    }
-
-    area.remove();
-
-  }
-
-  function speakText(
-    value
-  ){
-
-    if(
-      !(
-        "speechSynthesis" in
-        window
-      )
-    ){
-
-      toast(
-        "Browser tidak mendukung Text-to-Speech."
-      );
-
-      return;
-
-    }
-
-    window
-      .speechSynthesis
-      .cancel();
-
-    var u =
-      new SpeechSynthesisUtterance(
-        value
-      );
-
-    u.lang =
-      "id-ID";
-
-    u.rate =
-      .96;
-
-    window
-      .speechSynthesis
-      .speak(u);
-
-  }
-
-  function stopGeneration(){
-
-    if(controller){
-
-      controller.abort();
-
-    }
-
-  }
-
-  function openModal(
-    modal
-  ){
-
-    modal.classList.add(
-      "show"
-    );
-
-  }
-
-  function closeModal(
-    modal
-  ){
-
-    modal.classList.remove(
-      "show"
-    );
-
-  }
-
-  function openImageModal(){
-
-    if(loading){
-
-      toast(
-        "Tunggu proses yang sedang berjalan selesai."
-      );
-
-      return;
-
-    }
-
-    openModal(
-      el.imageModal
-    );
-
-    if(
-      !el.imagePrompt.value
-    ){
-
-      el.imagePrompt.value =
-        "Karakter Roblox sedang terbang dengan aura api super HD, cinematic, ultra detailed, epic lighting";
-
-    }
-
-    setTimeout(
-      function(){
-
-        el.imagePrompt.focus();
-
-      },
-      60
-    );
-
-  }
-
-  async function generateImage(){
-
-    if(loading){
-
-      toast(
-        "Tunggu proses sebelumnya selesai."
-      );
-
-      return;
-
-    }
-
-    var prompt =
-      el.imagePrompt.value
-        .trim();
-
-    if(!prompt){
-
-      toast(
-        "Masukkan prompt gambar dulu."
-      );
-
-      el.imagePrompt.focus();
-
-      return;
-
-    }
-
-    closeModal(
-      el.imageModal
-    );
-
-    var chat =
-      currentChat() ||
-      createChat(false);
-
-    if(
-      chat.title ===
-      "Chat Baru"
-    ){
-
-      chat.title =
-        "🎨 " +
-        prompt.slice(
-          0,
-          42
-        );
-
-    }
-
-    chat.messages.push({
-
-      role:
-        "user",
-
-      content:
-        "🎨 Buat gambar: " +
-        prompt
-
-    });
-
-    chat.updatedAt =
-      Date.now();
-
-    saveState();
-
-    renderHistory();
-    renderChat();
-
-    setLoading(true);
-
-    showTyping();
-
-    controller =
-      new AbortController();
-
-    el.generateImage.disabled =
-      true;
-
-    try{
-
-      var response =
-        await fetch(
-          "/generate-image",
-          {
-            method:
-              "POST",
-
-            headers:{
-              "Content-Type":
-                "application/json"
-            },
-
-            body:
-              JSON.stringify({
-                prompt:
-                  prompt
-              }),
-
-            signal:
-              controller.signal
-
-          }
-        );
-
-      var data =
-        await response
-          .json()
-          .catch(
-            function(){
-              return {};
-            }
-          );
-
-      removeTyping();
-
-      if(
-        !response.ok ||
-        !data.success
-      ){
-
-        throw new Error(
-          data.error ||
-          "Image Generator gagal."
-        );
-
-      }
-
-      if(
-        !data.image
-      ){
-
-        throw new Error(
-          "Server tidak mengirim gambar."
-        );
-
-      }
-
-      chat =
-        currentChat();
-
-      if(!chat){
-
-        throw new Error(
-          "Chat aktif tidak ditemukan."
-        );
-
-      }
-
-      chat.messages.push({
-
-        role:
-          "assistant",
-
-        content:
-          "🎨 Gambar berhasil dibuat.",
-
-        image:
-          data.image,
-
-        imagePrompt:
-          prompt
-
-      });
-
-      chat.updatedAt =
-        Date.now();
-
-      saveState();
-
-      renderHistory();
-      renderChat();
-
-      scrollBottom();
-
-      toast(
-        "🎨 Gambar berhasil dibuat!"
-      );
-
-    }catch(error){
-
-      removeTyping();
-
-      if(
-        error.name ===
-        "AbortError"
-      ){
-
-        toast(
-          "Pembuatan gambar dihentikan."
-        );
-
-      }else{
-
-        toast(
-          error.message ||
-          "Image Generator gagal."
-        );
-
-        console.error(
-          "IMAGE ERROR:",
-          error
-        );
-
-      }
-
-    }finally{
-
-      controller =
-        null;
-
-      el.generateImage.disabled =
-        false;
-
-      setLoading(
-        false
-      );
-
-    }
-
-  }
-
-  function openMemoryModal(){
-
-    var memory =
-      loadMemory();
-
-    el.memoryName.value =
-      memory.name ||
-      "";
-
-    el.memoryFacts.value =
-      memory.facts.join(
-        "\n"
-      );
-
-    openModal(
-      el.memoryModal
-    );
-
-  }
-
-  function saveMemoryFromUI(){
-
-    saveMemory({
-
-      name:
-        el.memoryName.value,
-
-      facts:
-        el.memoryFacts.value
-          .split("\n")
-
-    });
-
-    closeModal(
-      el.memoryModal
-    );
-
-    toast(
-      "🧠 Global Memory tersimpan."
-    );
-
-  }
-
-  function clearMemoryFromUI(){
-
-    if(
-      !confirm(
-        "Yakin hapus Global Memory?"
-      )
-    ){
-
-      return;
-
-    }
-
-    localStorage.removeItem(
-      MEMORY_KEY
-    );
-
-    el.memoryName.value =
-      "";
-
-    el.memoryFacts.value =
-      "";
-
-    toast(
-      "Memory dihapus."
-    );
-
-  }
-
-  function startVoice(){
-
-    var SpeechRecognition =
-      window.SpeechRecognition ||
-      window.webkitSpeechRecognition;
-
-    if(
-      !SpeechRecognition
-    ){
-
-      toast(
-        "Browser ini tidak mendukung Voice Input."
-      );
-
-      return;
-
-    }
-
-    if(
-      recognition
-    ){
-
-      recognition.stop();
-      recognition =
-        null;
-
-      return;
-
-    }
-
-    recognition =
-      new SpeechRecognition();
-
-    recognition.lang =
-      "id-ID";
-
-    recognition.continuous =
-      false;
-
-    recognition.interimResults =
-      true;
-
-    recognition.onstart =
-      function(){
-
-        toast(
-          "🎤 Silakan bicara..."
-        );
-
-      };
-
-    recognition.onresult =
-      function(event){
-
-        var transcript =
-          "";
-
-        for(
-          var i =
-            event.resultIndex;
-          i <
-            event.results.length;
-          i++
-        ){
-
-          transcript +=
-            event
-              .results[i][0]
-              .transcript;
-
-        }
-
-        el.input.value =
-          transcript;
-
-        resizeInput();
-
-      };
-
-    recognition.onerror =
-      function(){
-
-        toast(
-          "Voice Input gagal."
-        );
-
-      };
-
-    recognition.onend =
-      function(){
-
-        recognition =
-          null;
-
-      };
-
-    try{
-
-      recognition.start();
-
-    }catch(error){
-
-      recognition =
-        null;
-
-      toast(
-        "Voice Input tidak dapat dimulai."
-      );
-
-    }
-
-  }
-
-  function resizeInput(){
-
-    el.input.style.height =
-      "auto";
-
-    el.input.style.height =
-      Math.min(
-        el.input.scrollHeight,
-        180
-      ) +
-      "px";
-
-  }
-
-  function quickAsk(
-    text
-  ){
-
-    el.input.value =
-      text;
-
-    resizeInput();
-
-    el.input.focus();
-
-    sendMessage();
-
-  }
-
-  function toggleSidebar(){
-
-    el.sidebar.classList.toggle(
-      "open"
-    );
-
-  }
-
-  function closeSidebar(){
-
-    el.sidebar.classList.remove(
-      "open"
-    );
-
-  }
-
-  function exportChats(){
-
-    try{
-
-      var data = {
-
-        exportedAt:
-          new Date()
-            .toISOString(),
-
-        app:
-          "Power AI",
-
-        chats:
-          chats,
-
-        memory:
-          loadMemory()
-
-      };
-
-      var blob =
-        new Blob(
-          [
-            JSON.stringify(
-              data,
-              null,
-              2
-            )
-          ],
-          {
-            type:
-              "application/json"
-          }
-        );
-
-      var url =
-        URL.createObjectURL(
-          blob
-        );
-
-      var a =
-        document.createElement(
-          "a"
-        );
-
-      a.href =
-        url;
-
-      a.download =
-        "power-ai-backup.json";
-
-      document.body.appendChild(
-        a
-      );
-
-      a.click();
-
-      a.remove();
-
-      setTimeout(
-        function(){
-
-          URL.revokeObjectURL(
-            url
-          );
-
-        },
-        1000
-      );
-
-      toast(
-        "📦 Backup berhasil diexport."
-      );
-
-    }catch(error){
-
-      toast(
-        "Gagal export history."
-      );
-
-    }
-
-  }
-
-  document
-    .getElementById(
-      "newChatBtn"
-    )
-    .addEventListener(
-      "click",
-      newChat
-    );
-
-  document
-    .getElementById(
-      "imageBtnSide"
-    )
-    .addEventListener(
-      "click",
-      openImageModal
-    );
-
-  document
-    .getElementById(
-      "memoryBtnSide"
-    )
-    .addEventListener(
-      "click",
-      openMemoryModal
-    );
-
-  document
-    .getElementById(
-      "exportBtn"
-    )
-    .addEventListener(
-      "click",
-      exportChats
-    );
-
-  document
-    .getElementById(
-      "clearBtn"
-    )
-    .addEventListener(
-      "click",
-      clearAllChats
-    );
-
-  document
-    .getElementById(
-      "imageBtnTop"
-    )
-    .addEventListener(
-      "click",
-      openImageModal
-    );
-
-  document
-    .getElementById(
-      "memoryBtnTop"
-    )
-    .addEventListener(
-      "click",
-      openMemoryModal
-    );
-
-  document
-    .getElementById(
-      "imageBtnComposer"
-    )
-    .addEventListener(
-      "click",
-      openImageModal
-    );
-
-  document
-    .getElementById(
-      "voiceBtn"
-    )
-    .addEventListener(
-      "click",
-      startVoice
-    );
-
-  el.stop.addEventListener(
-    "click",
-    stopGeneration
-  );
-
-  el.send.addEventListener(
-    "click",
-    sendMessage
-  );
-
-  el.input.addEventListener(
-    "input",
-    resizeInput
-  );
-
-  el.input.addEventListener(
-    "keydown",
-    function(event){
-
-      if(
-        event.key ===
-          "Enter" &&
-        !event.shiftKey
-      ){
-
-        event.preventDefault();
-
-        sendMessage();
-
-      }
-
-    }
-  );
-
-  el.historySearch.addEventListener(
-    "input",
-    renderHistory
-  );
-
-  el.generateImage.addEventListener(
-    "click",
-    generateImage
-  );
-
-  el.saveMemory.addEventListener(
-    "click",
-    saveMemoryFromUI
-  );
-
-  el.clearMemory.addEventListener(
-    "click",
-    clearMemoryFromUI
-  );
-
-  document
-    .getElementById(
-      "menuBtn"
-    )
-    .addEventListener(
-      "click",
-      toggleSidebar
-    );
-
-  document
-    .querySelectorAll(
-      "[data-close]"
-    )
-    .forEach(
-      function(button){
-
-        button.addEventListener(
-          "click",
-          function(){
-
-            var target =
-              document.getElementById(
-                button.getAttribute(
-                  "data-close"
-                )
-              );
-
-            if(target){
-
-              closeModal(
-                target
-              );
-
-            }
-
-          }
-        );
-
-      }
-    );
-
-  [
-    el.imageModal,
-    el.memoryModal
-  ].forEach(
-    function(modal){
-
-      modal.addEventListener(
-        "click",
-        function(event){
-
-          if(
-            event.target ===
-            modal
-          ){
-
-            closeModal(
-              modal
-            );
-
-          }
-
-        }
-      );
-
-    }
-  );
-
-  document
-    .querySelectorAll(
-      "[data-prompt]"
-    )
-    .forEach(
-      function(button){
-
-        button.addEventListener(
-          "click",
-          function(){
-
-            el.imagePrompt.value =
-              button.getAttribute(
-                "data-prompt"
-              ) ||
-              "";
-
-            el.imagePrompt.focus();
-
-          }
-        );
-
-      }
-    );
-
-  document.addEventListener(
-    "keydown",
-    function(event){
-
-      if(
-        event.key ===
-        "Escape"
-      ){
-
-        closeModal(
-          el.imageModal
-        );
-
-        closeModal(
-          el.memoryModal
-        );
-
-        closeSidebar();
-
-      }
-
-    }
-  );
-
-  window.addEventListener(
-    "beforeunload",
-    function(){
-
-      saveState();
-
-    }
-  );
-
-  loadState();
-
-  renderHistory();
-
-  renderChat();
-
-  resizeInput();
-
-  el.input.focus();
-
-})();
-</script>
-
-</body>
-</html>
+const memoryFacts =
+    document.getElementById("mem
